@@ -1,0 +1,41 @@
+# Runs the full system locally: LocalStack (SQS + CloudWatch) plus the API and both workers.
+x-common: &common
+  build: .
+  environment: &env
+    AWS_ENDPOINT_URL: http://localstack:4566
+    AWS_REGION: us-east-1
+    DB_PATH: /data/pipeline.db
+    CLOUDWATCH_METRICS_ENABLED: "true"
+    WAIT_TIME_SECONDS: "5"
+  volumes: [pipeline-data:/data]
+  depends_on:
+    localstack:
+      condition: service_healthy
+
+services:
+  localstack:
+    image: localstack/localstack:3
+    environment:
+      SERVICES: sqs,cloudwatch
+    ports: ["4566:4566"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:4566/_localstack/health | grep -q '\"sqs\": \"\\(available\\|running\\)\"'"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    <<: *common
+    command: ["python", "-m", "pipeline", "api"]
+    ports: ["8000:8000"]
+
+  classifier:
+    <<: *common
+    command: ["python", "-m", "pipeline", "classifier"]
+
+  responder:
+    <<: *common
+    command: ["python", "-m", "pipeline", "responder"]
+
+volumes:
+  pipeline-data:

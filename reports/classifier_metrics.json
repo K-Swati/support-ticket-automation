@@ -1,0 +1,59 @@
+{
+  "model_version": "tfidf-lr-db1da671",
+  "train_examples": 1500,
+  "data": "synthetic, template-generated (see pipeline/classifier/data.py)",
+  "in_distribution": {
+    "n": 1000,
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "mean_confidence": 0.9897,
+    "per_class_f1": {
+      "billing": 1.0,
+      "technical_issue": 1.0,
+      "account_access": 1.0,
+      "cancellation": 1.0,
+      "general_inquiry": 1.0
+    },
+    "top_confusions": []
+  },
+  "unseen_templates": {
+    "n": 1000,
+    "accuracy": 0.833,
+    "macro_f1": 0.8317,
+    "mean_confidence": 0.7205,
+    "per_class_f1": {
+      "billing": 0.6348,
+      "technical_issue": 0.8266,
+      "account_access": 0.9876,
+      "cancellation": 1.0,
+      "general_inquiry": 0.7097
+    },
+    "top_confusions": [
+      {
+        "true": "billing",
+        "predicted": "general_inquiry",
+        "count": 103
+      },
+      {
+        "true": "technical_issue",
+        "predicted": "general_inquiry",
+        "count": 57
+      },
+      {
+        "true": "billing",
+        "predicted": "account_access",
+        "count": 4
+      },
+      {
+        "true": "general_inquiry",
+        "predicted": "technical_issue",
+        "count": 2
+      },
+      {
+        "true": "account_access",
+        "predicted": "technical_issue",
+        "count": 1
+      }
+    ]
+  }
+}
